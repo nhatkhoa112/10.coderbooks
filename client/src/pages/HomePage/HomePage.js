@@ -9,6 +9,7 @@ import './style.css';
 
 import Post from '../../components/Post';
 import Composer from '../../components/Composer';
+import { ModalUpdate } from '../../components/ModalUpdate/ModalUpdate';
 
 const SIDEBAR_BUTTONS = [
   {
@@ -47,6 +48,8 @@ const SidebarButton = ({ title, icon }) => {
 export default function HomePage() {
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
   const dispatch = useDispatch();
+  const [modalOpen, setModalOpen] = useState(false);
+  const [postId, setPostId] = useState('');
   const [pageNum, setPageNum] = useState(1);
   const [limit, setLimit] = useState(10);
   const [query, setQuery] = useState(null);
@@ -74,8 +77,21 @@ export default function HomePage() {
         className="d-flex flex-column align-items-center posts-container"
       >
         <Composer />
+        <ModalUpdate
+          modalOpen={modalOpen}
+          setModalOpen={setModalOpen}
+          postId={postId}
+        />
         {posts?.map((post) => {
-          return <Post key={post._id} post={post} />;
+          return (
+            <Post
+              key={post._id}
+              post={post}
+              modalOpen={modalOpen}
+              setModalOpen={setModalOpen}
+              setPostId={setPostId}
+            />
+          );
         })}
 
         {/* <Post />

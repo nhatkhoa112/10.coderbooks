@@ -4,7 +4,7 @@ import * as commentTypes from '../constants/comment.constants';
 const initialState = {
   posts: [],
   totalPageNum: 1,
-  selectedBlog: null,
+  selectedBlog: {},
   loading: false,
 };
 
@@ -36,7 +36,7 @@ const postReducer = (state = initialState, action) => {
       return { ...state, loading: false, posts: [...state.posts] };
 
     case types.GET_SINGLE_POST_REQUEST_SUCCESS:
-      return { ...state, selectedBlog: payload, loading: false };
+      return { ...state, selectedBlog: payload.posts[0], loading: false };
 
     case types.UPDATE_POST_SUCCESS:
       return {

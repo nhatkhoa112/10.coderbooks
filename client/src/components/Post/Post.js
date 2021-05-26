@@ -146,9 +146,15 @@ const PostReactions = ({ comments }) => {
   );
 };
 
-function PostHeader({ userMakePost, postId}) {
+function PostHeader({
+  userMakePost,
+  postId,
+  modalOpen,
+  setModalOpen,
+  setPostId,
+}) {
   const dispatch = useDispatch();
-
+  const user = useSelector((state) => state.auth.user);
   return (
     <div className="d-flex align-items-center p-3 position-relative">
       <Nav.Link as={Link} to={`/${userMakePost?.name}`}>
@@ -169,7 +175,16 @@ function PostHeader({ userMakePost, postId}) {
           title={<i className="fas fa-ellipsis-h"></i>}
         >
           <NavDropdown.Divider />
-          <NavDropdown.Item>Edit</NavDropdown.Item>
+          <NavDropdown.Item
+            onClick={() => {
+              if (user.email === userMakePost.email) {
+                setPostId(postId);
+                setModalOpen(!modalOpen);
+              }
+            }}
+          >
+            Edit
+          </NavDropdown.Item>
           <NavDropdown.Item
             onClick={() => dispatch(postActions.deletePost(postId))}
           >
@@ -181,10 +196,16 @@ function PostHeader({ userMakePost, postId}) {
   );
 }
 
-export default function Post({ post }) {
+export default function Post({ post, modalOpen, setModalOpen, setPostId }) {
   return (
     <Card className="p-3 mb-3 shadow rounded-md">
-      <PostHeader userMakePost={post.owner} postId={post._id} />
+      <PostHeader
+        userMakePost={post.owner}
+        postId={post._id}
+        modalOpen={modalOpen}
+        setModalOpen={setModalOpen}
+        setPostId={setPostId}
+      />
       <p>{post.body}</p>
       <Card.Img
         variant="top"

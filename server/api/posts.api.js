@@ -14,7 +14,7 @@ router.get('/:id', postsController.read);
 router.post('/:id', postsController.read);
 router.post('/', authMiddleware.loginRequired, postsController.create);
 
-router.put('/:id', postsController.update);
+router.patch('/:id', postsController.update);
 router.delete('/:id', postsController.destroy);
 
 module.exports = router;

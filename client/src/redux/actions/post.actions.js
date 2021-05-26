@@ -86,24 +86,30 @@ const createPost = (post) => async (dispatch) => {
   }
 };
 
-const updatePost = (postId, title, content, images) => async (dispatch) => {
-  dispatch({ type: types.UPDATE_POST_REQUEST, payload: null });
-  try {
-    // let formData = new FormData();
-    // formData.set("title", title);
-    // formData.set("content", content);
-    const res = await api.put(`/posts/${postId}`, { title, content, images });
+const updatePost =
+  (
+    postId,
+    body
+    // , title, content, images
+  ) =>
+  async (dispatch) => {
+    dispatch({ type: types.UPDATE_POST_REQUEST, payload: null });
+    try {
+      // let formData = new FormData();
+      // formData.set("title", title);
+      // formData.set("content", content);
+      const res = await api.patch(`/posts/${postId}`, { body });
 
-    dispatch({
-      payload: res.data.data,
-      type: types.UPDATE_POST_SUCCESS,
-    });
-    dispatch(routeActions.redirect('__GO_BACK__'));
-    toast.success('Post updated.');
-  } catch (error) {
-    dispatch({ type: types.UPDATE_POST_FAILURE, payload: error });
-  }
-};
+      dispatch({
+        payload: res.data.data,
+        type: types.UPDATE_POST_SUCCESS,
+      });
+      dispatch(routeActions.redirect('__GO_BACK__'));
+      toast.success('Post updated.');
+    } catch (error) {
+      dispatch({ type: types.UPDATE_POST_FAILURE, payload: error });
+    }
+  };
 
 const deletePost = (postId) => async (dispatch) => {
   dispatch({ type: types.DELETE_POST_REQUEST, payload: null });

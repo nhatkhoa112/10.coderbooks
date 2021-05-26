@@ -22,7 +22,6 @@ postController.read = catchAsync(async (req, res, next) => {
   const post = await Post.findOne({ _id: req.params.id });
   if (!post)
     return next(new AppError(404, 'Post not found', 'Get Single Post Error'));
-
   await post.populate('owner').populate('comments');
   await post.execPopulate();
 
@@ -32,7 +31,8 @@ postController.read = catchAsync(async (req, res, next) => {
 postController.update = catchAsync(async (req, res) => {
   await Post.findByIdAndUpdate(
     { _id: req.params.id },
-    { email: req.body.email },
+    { ...req.body },
+    // { email: req.body.email },
     { new: true },
     (err, post) => {
       console.log({ err, post });
