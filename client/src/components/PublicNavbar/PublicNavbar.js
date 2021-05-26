@@ -84,7 +84,6 @@ const PublicNavbar = () => {
           </div>
         }
       >
-        <NavDropdown.Item href="#action/3.1">Loi V Tran</NavDropdown.Item>
         <NavDropdown.Divider />
         <NavDropdown.Item onClick={handleLogout} href="#action/3.4">
           Log out

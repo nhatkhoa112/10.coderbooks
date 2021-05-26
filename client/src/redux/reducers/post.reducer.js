@@ -30,11 +30,10 @@ const postReducer = (state = initialState, action) => {
         totalPageNum: payload.totalPages,
       };
     case commentTypes.CREATE_COMMENT_SUCCESS:
-      console.log(payload);
-      let idx = state.posts.findIndex((post) => post._id === payload.post._id);
+      let idx = state.posts.findIndex((post) => post._id === payload._id);
       state.posts[idx] = payload;
 
-      return { ...state, loading: false, posts: state.posts };
+      return { ...state, loading: false, posts: [...state.posts] };
 
     case types.GET_SINGLE_POST_REQUEST_SUCCESS:
       return { ...state, selectedBlog: payload, loading: false };
@@ -54,7 +53,6 @@ const postReducer = (state = initialState, action) => {
       return { ...state, loading: false };
 
     case types.CREATE_POST_SUCCESS:
-      console.log(payload);
       return {
         ...state,
         loading: false,
@@ -62,8 +60,10 @@ const postReducer = (state = initialState, action) => {
       };
 
     case types.DELETE_POST_SUCCESS:
+      state.posts = state.posts.filter((post) => post._id !== payload._id);
       return {
         ...state,
+        posts: [...state.posts],
         loading: false,
         selectedBlog: {},
       };

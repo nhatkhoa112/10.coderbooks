@@ -8,45 +8,13 @@ import {
   ListGroup,
   ButtonGroup,
   ListGroupItem,
+  NavDropdown,
   Nav,
 } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useDispatch, useSelector } from 'react-redux';
 import './style.css';
-import { commentActions } from '../../redux/actions';
-
-const COMMENTS = [
-  {
-    id: 1,
-    body: `Loi you're such a talented developer. I hope one day I can be just like you. Hihi =)`,
-    user: {
-      name: 'Charles Lee',
-      avatarUrl:
-        'https://scontent.fsgn5-6.fna.fbcdn.net/v/t1.0-1/p480x480/13924881_10105599279810183_392497317459780337_n.jpg?_nc_cat=109&ccb=3&_nc_sid=7206a8&_nc_ohc=uI6aGTdf9vEAX8-Aev9&_nc_ht=scontent.fsgn5-6.fna&tp=6&oh=e8b18753cb8aa63937829afe3aa916a7&oe=6064C685',
-    },
-  },
-  {
-    id: 2,
-    body: `Thank you...`,
-    user: {
-      name: 'Loi Tran',
-      avatarUrl:
-        'https://scontent.fsgn5-2.fna.fbcdn.net/v/t1.0-1/14633014_10154745913714359_6100717154322258576_n.jpg?_nc_cat=105&ccb=3&_nc_sid=7206a8&_nc_ohc=PO1d3X9U7egAX9IFy1u&_nc_oc=AQlNWL-YG7EdcZYBqWlyn2vCvGxKMG6jXMOdGl-GUkRLMAxUZPnM2mMfh_mjayYJMyA&_nc_ht=scontent.fsgn5-2.fna&oh=abda95a6abf3b5883dbd6078cd8f36a3&oe=6061BFC6',
-    },
-  },
-  {
-    id: 3,
-    body: `SO talented! SO talented! SO talented! SO talented! SO talented! SO talented! SO talented! SO talented! SO talented! SO talented! SO talented! SO talented! SO talented! SO talented! SO talented! SO talented! SO talented! SO talented! SO talented! SO talented! SO talented! SO talented! SO talented! SO talented! SO talented! SO talented! SO talented! SO talented! SO talented! 
-    SO talented! 
-    SO talented! 
-    SO talented! `,
-    user: {
-      name: 'Charles Lee',
-      avatarUrl:
-        'https://scontent.fsgn5-6.fna.fbcdn.net/v/t1.0-1/p480x480/13924881_10105599279810183_392497317459780337_n.jpg?_nc_cat=109&ccb=3&_nc_sid=7206a8&_nc_ohc=uI6aGTdf9vEAX8-Aev9&_nc_ht=scontent.fsgn5-6.fna&tp=6&oh=e8b18753cb8aa63937829afe3aa916a7&oe=6064C685',
-    },
-  },
-];
+import { commentActions, postActions } from '../../redux/actions';
 
 const Avatar = (props) => {
   return <img alt="profile" className="rounded-circle" src={props.url} />;
@@ -81,6 +49,7 @@ const CommentForm = ({ postId, comments }) => {
 };
 
 const Comment = (props) => {
+  const user = useSelector((state) => state.auth.user);
   return (
     <ListGroupItem className="justify-content-start border-bottom-0 pr-0 py-0">
       <Nav.Link as={Link} to={`/${props.owner.name}`}>
@@ -91,7 +60,7 @@ const Comment = (props) => {
           }
         />
       </Nav.Link>
-      <div className="col">
+      <div className="col position-relative">
         <div className="comment-bubble">
           <Nav.Link
             className="owner-name"
@@ -102,6 +71,21 @@ const Comment = (props) => {
             <div className="font-weight-bold">{props.owner.name}</div>
           </Nav.Link>
           <p>{props.body}</p>
+          {user.email === props.owner.email ? (
+            <div className="dropbox-comment">
+              <NavDropdown
+                alignRight
+                id="dropdown-basic"
+                title={<i className="fas fa-ellipsis-h"></i>}
+              >
+                <NavDropdown.Divider />
+                <NavDropdown.Item>Edit</NavDropdown.Item>
+                <NavDropdown.Item>Delete</NavDropdown.Item>
+              </NavDropdown>
+            </div>
+          ) : (
+            ''
+          )}
         </div>
       </div>
     </ListGroupItem>
@@ -109,7 +93,6 @@ const Comment = (props) => {
 };
 
 const PostComments = (props) => {
-  console.log(props.comments);
   return (
     <Card.Body>
       <ListGroup className="list-group-flush">
@@ -163,10 +146,12 @@ const PostReactions = ({ comments }) => {
   );
 };
 
-function PostHeader({ userMakePost }) {
+function PostHeader({ userMakePost, postId}) {
+  const dispatch = useDispatch();
+
   return (
-    <div className="d-flex align-items-center p-3">
-      <Nav.Link as={Link} to={`/${userMakePost.name}`}>
+    <div className="d-flex align-items-center p-3 position-relative">
+      <Nav.Link as={Link} to={`/${userMakePost?.name}`}>
         <Avatar
           url={
             userMakePost.avatarUrl ||
@@ -177,6 +162,21 @@ function PostHeader({ userMakePost }) {
       <Nav.Link className="owner-name" as={Link} to={`/${userMakePost.name}`}>
         <h3 className="font-weight-bold ml-3">{userMakePost.name}</h3>
       </Nav.Link>
+      <div className="dropbox">
+        <NavDropdown
+          alignRight
+          id="dropdown-basic"
+          title={<i className="fas fa-ellipsis-h"></i>}
+        >
+          <NavDropdown.Divider />
+          <NavDropdown.Item>Edit</NavDropdown.Item>
+          <NavDropdown.Item
+            onClick={() => dispatch(postActions.deletePost(postId))}
+          >
+            Delete
+          </NavDropdown.Item>
+        </NavDropdown>
+      </div>
     </div>
   );
 }
@@ -184,7 +184,7 @@ function PostHeader({ userMakePost }) {
 export default function Post({ post }) {
   return (
     <Card className="p-3 mb-3 shadow rounded-md">
-      <PostHeader userMakePost={post.owner} />
+      <PostHeader userMakePost={post.owner} postId={post._id} />
       <p>{post.body}</p>
       <Card.Img
         variant="top"
@@ -196,6 +196,6 @@ export default function Post({ post }) {
       <hr className="mt-1" />
       <PostComments comments={post.comments} />
       <CommentForm postId={post._id} />
-  </Card>
+    </Card>
   );
 }

@@ -38,3 +38,54 @@
   text-decoration: underline;
   color: black !important;
 }
+
+.dropbox{
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #ccc;
+  display: flex;
+  justify-content: center;
+  align-items: center;  
+  position: absolute;
+  right: 20px;
+  color: rgba(0,0,0,0.8) !important;
+
+}
+
+.dropbox:hover{
+  
+  cursor: pointer;
+  color: black !important;
+
+}
+
+.fa-ellipsis-h:before {
+    content: "\f141";
+    color: black;
+}
+
+
+.dropbox-comment{
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #ccc;
+  display: flex;
+  justify-content: center;
+  align-items: center;  
+  position: absolute;
+  top: 15px;
+  right: 20px;
+  color: rgba(0,0,0,0.8) !important;
+}
+
+.dropbox-comment:hover{
+  cursor: pointer;
+  color: black !important;
+}
+
+.dropdown-menu.show.dropdown-menu-right{
+  transform: translate(-100px, 42px) !important;
+  z-index: 1000;
+}

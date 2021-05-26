@@ -9,9 +9,10 @@ const createComment = (postId, body) => async (dispatch) => {
     });
     dispatch({
       type: types.CREATE_COMMENT_SUCCESS,
-      payload: res.data.data,
+      payload: res.data.data.post,
     });
   } catch (error) {
+    console.log(error);
     dispatch({ type: types.CREATE_COMMENT_FAILURE, payload: error });
   }
 };

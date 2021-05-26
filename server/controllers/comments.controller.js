@@ -66,6 +66,6 @@ commentsController.list = async (req, res) => {
       res.json(comments);
     }
   });
-};
+}
 
 module.exports = commentsController;
