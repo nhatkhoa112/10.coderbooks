@@ -89,7 +89,7 @@ const createPost = (post) => async (dispatch) => {
 const updatePost =
   (
     postId,
-    body
+    postBody
     // , title, content, images
   ) =>
   async (dispatch) => {
@@ -98,10 +98,10 @@ const updatePost =
       // let formData = new FormData();
       // formData.set("title", title);
       // formData.set("content", content);
-      const res = await api.patch(`/posts/${postId}`, { body });
+      const res = await api.patch(`/posts/${postId}`, { body: postBody });
 
       dispatch({
-        payload: res.data.data,
+        payload: res.data,
         type: types.UPDATE_POST_SUCCESS,
       });
       dispatch(routeActions.redirect('__GO_BACK__'));

@@ -37,12 +37,12 @@ export const ModalUpdate = ({
   }, [dispatch]);
 
   useEffect(() => {
-    setPostBody(selectedBlog.body);
+    if (selectedBlog) setPostBody(selectedBlog.body);
   }, [selectedBlog]);
 
   const handleSubmit = (e) => {
-    e.preventDefault();
-    dispatch(postActions.updatePost(postBody, postId));
+    console.log(postBody);
+    dispatch(postActions.updatePost(postId, postBody));
     setModalOpen(false);
     setPostBody('');
   };
@@ -66,7 +66,7 @@ export const ModalUpdate = ({
                     placeholder={`What's on your mind, ${user.name}?`}
                     className="border-0 rounded-md post-text"
                     value={postBody}
-                    onChange={(e) => setPostBody(e.target.vale)}
+                    onChange={(e) => setPostBody(e.target.value)}
                   />
                 </Form.Group>
               </Form>
