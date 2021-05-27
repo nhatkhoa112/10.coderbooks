@@ -15,7 +15,11 @@ import {
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useDispatch, useSelector } from 'react-redux';
 import './style.css';
-import { commentActions, postActions } from '../../redux/actions';
+import {
+  commentActions,
+  postActions,
+  reactionActions,
+} from '../../redux/actions';
 
 const Avatar = (props) => {
   return <img alt="profile" className="rounded-circle" src={props.url} />;
@@ -153,47 +157,88 @@ const POST_ACTIONS = [
   { title: 'Share', icon: 'share' },
 ];
 
-const PostActionButton = ({ title, icon }) => {
+const PostActionButton = ({ a, post }) => {
+  const dispatch = useDispatch();
   const [isReaction, setIsReaction] = useState(false);
+  const user = useSelector((state) => state.auth.user);
+  const userReaction = post.reactions.filter(
+    (reaction) => reaction.owner.email === user.email
+  );
+  const postId = post._id;
   return (
     <Button
       className="bg-light bg-white text-dark border-0 position-relative"
       onClick={() => {
-        if ((title = 'Like')) setIsReaction(!isReaction);
+        if ((a.title = 'Like')) setIsReaction(!isReaction);
       }}
     >
       {' '}
       <FontAwesomeIcon
         size="lg"
-        icon={icon}
+        icon={a.icon}
         color="black"
         className="mr-2 action-icon"
       />
-      {title === 'Like' ? (
+      {a.title === 'Like' ? (
         <Reaction isReaction={isReaction}>
           <ButtonR
             onClick={(e) => {
               e.preventDefault();
+              if (userReaction.length !== 0) {
+                if (userReaction[0].enum !== 'Like') {
+                  dispatch(reactionActions.createReaction(postId, 'Like'));
+                } else {
+                  dispatch(reactionActions.deleteReaction(postId, 'Like'));
+                }
+              } else {
+                dispatch(reactionActions.updateReaction(postId, 'Like'));
+              }
             }}
           >
             <i
               className="far fa-thumbs-up"
-              style={{ borderRadius: '50%', color: 'blue', fontSize: '1.5rem' }}
+              style={{
+                borderRadius: '50%',
+                color: 'blue',
+                fontSize: '1.5rem',
+              }}
             ></i>
           </ButtonR>
           <ButtonR
             onClick={(e) => {
               e.preventDefault();
+              if (userReaction.length !== 0) {
+                if (userReaction[0].enum !== 'Love') {
+                  dispatch(reactionActions.createReaction(postId, 'Love'));
+                } else {
+                  dispatch(reactionActions.deleteReaction(postId, 'Love'));
+                }
+              } else {
+                dispatch(reactionActions.updateReaction(postId, 'Love'));
+              }
             }}
           >
             <i
               className="fas fa-heart"
-              style={{ borderRadius: '50%', color: 'red', fontSize: '1.5rem' }}
+              style={{
+                borderRadius: '50%',
+                color: 'red',
+                fontSize: '1.5rem',
+              }}
             ></i>
           </ButtonR>
           <ButtonR
             onClick={(e) => {
               e.preventDefault();
+              if (userReaction.length !== 0) {
+                if (userReaction[0].enum !== 'Surprise') {
+                  dispatch(reactionActions.createReaction(postId, 'Surprise'));
+                } else {
+                  dispatch(reactionActions.deleteReaction(postId, 'Surprise'));
+                }
+              } else {
+                dispatch(reactionActions.updateReaction(postId, 'Surprise'));
+              }
             }}
           >
             <i
@@ -208,6 +253,15 @@ const PostActionButton = ({ title, icon }) => {
           <ButtonR
             onClick={(e) => {
               e.preventDefault();
+              if (userReaction.length !== 0) {
+                if (userReaction[0].enum !== 'Sad') {
+                  dispatch(reactionActions.createReaction(postId, 'Sad'));
+                } else {
+                  dispatch(reactionActions.deleteReaction(postId, 'Sad'));
+                }
+              } else {
+                dispatch(reactionActions.updateReaction(postId, 'Sad'));
+              }
             }}
           >
             <i
@@ -222,6 +276,15 @@ const PostActionButton = ({ title, icon }) => {
           <ButtonR
             onClick={(e) => {
               e.preventDefault();
+              if (userReaction.length !== 0) {
+                if (userReaction[0].enum !== 'Angry') {
+                  dispatch(reactionActions.createReaction(postId, 'Angry'));
+                } else {
+                  dispatch(reactionActions.deleteReaction(postId, 'Angry'));
+                }
+              } else {
+                dispatch(reactionActions.updateReaction(postId, 'Angry'));
+              }
             }}
           >
             <i
@@ -237,16 +300,16 @@ const PostActionButton = ({ title, icon }) => {
       ) : (
         ''
       )}
-      {title}
+      {a.title}
     </Button>
   );
 };
 
-const PostActions = () => {
+const PostActions = ({ post }) => {
   return (
     <ButtonGroup aria-label="Basic example">
       {POST_ACTIONS.map((a) => {
-        return <PostActionButton key={a.title} {...a} />;
+        return <PostActionButton key={a.title} a={a} post={post} />;
       })}
     </ButtonGroup>
   );
@@ -331,7 +394,7 @@ export default function Post({ post, modalOpen, setModalOpen, setPostId }) {
       />
       <PostReactions comments={post.comments} reactions={post.reactions} />
       <hr className="my-1" />
-      <PostActions />
+      <PostActions post={post} />
       <hr className="mt-1" />
       <PostComments comments={post.comments} />
       <CommentForm postId={post._id} />

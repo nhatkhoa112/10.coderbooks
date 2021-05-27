@@ -1,5 +1,6 @@
 import * as types from '../constants/post.constants';
 import * as commentTypes from '../constants/comment.constants';
+import * as reactionTypes from '../constants/reaction.constants';
 
 const initialState = {
   posts: [],
@@ -12,6 +13,9 @@ const postReducer = (state = initialState, action) => {
   const { type, payload } = action;
   let idu, idz;
   switch (type) {
+    case reactionTypes.UPDATE_REACTION:
+    case reactionTypes.DELETE_REACTION:
+    case reactionTypes.CREATE_REACTION:
     case commentTypes.UPDATE_COMMENT:
     case commentTypes.DELETE_COMMENT:
     case commentTypes.CREATE_COMMENT:
@@ -42,6 +46,9 @@ const postReducer = (state = initialState, action) => {
 
       return { ...state, loading: false, posts: [...state.posts] };
 
+    case reactionTypes.CREATE_REACTION_SUCCESS:
+      return { ...state, loading: false };
+
     case types.GET_SINGLE_POST_REQUEST_SUCCESS:
       return { ...state, selectedBlog: payload.posts[0], loading: false };
 
@@ -51,6 +58,9 @@ const postReducer = (state = initialState, action) => {
         loading: false,
         selectedBlog: payload,
       };
+    case reactionTypes.UPDATE_REACTION_FAILURE:
+    case reactionTypes.DELETE_REACTION_FAILURE:
+    case reactionTypes.CREATE_REACTION_FAILURE:
     case commentTypes.UPDATE_COMMENT_FAILURE:
     case commentTypes.DELETE_COMMENT_FAILURE:
     case commentTypes.CREATE_COMMENT_FAILURE:
@@ -81,6 +91,12 @@ const postReducer = (state = initialState, action) => {
         posts: [...state.posts],
       };
 
+    case reactionTypes.UPDATE_REACTION_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+      };
+
     case types.DELETE_POST_SUCCESS:
       state.posts = state.posts.filter((post) => post._id !== payload._id);
       return {
@@ -90,16 +106,10 @@ const postReducer = (state = initialState, action) => {
         selectedBlog: {},
       };
 
-    case commentTypes.DELETE_COMMENT_SUCCESS:
-      let ids = state.posts.findIndex((post) => post._id === payload.post);
-      state.posts[ids].comments = state.posts[ids].comments.filter(
-        (comment) => comment._id !== payload._id
-      );
-
+    case reactionTypes.DELETE_REACTION_SUCCESS:
       return {
         ...state,
         loading: true,
-        posts: [...state.posts],
       };
 
     case types.SEND_REACTION_REQUEST:
