@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { Reaction, ButtonR } from './PostElement.js';
 import {
   Col,
   Form,
@@ -153,8 +154,14 @@ const POST_ACTIONS = [
 ];
 
 const PostActionButton = ({ title, icon }) => {
+  const [isReaction, setIsReaction] = useState(false);
   return (
-    <Button className="bg-light bg-white text-dark border-0">
+    <Button
+      className="bg-light bg-white text-dark border-0 position-relative"
+      onClick={() => {
+        if ((title = 'Like')) setIsReaction(!isReaction);
+      }}
+    >
       {' '}
       <FontAwesomeIcon
         size="lg"
@@ -162,6 +169,74 @@ const PostActionButton = ({ title, icon }) => {
         color="black"
         className="mr-2 action-icon"
       />
+      {title === 'Like' ? (
+        <Reaction isReaction={isReaction}>
+          <ButtonR
+            onClick={(e) => {
+              e.preventDefault();
+            }}
+          >
+            <i
+              className="far fa-thumbs-up"
+              style={{ borderRadius: '50%', color: 'blue', fontSize: '1.5rem' }}
+            ></i>
+          </ButtonR>
+          <ButtonR
+            onClick={(e) => {
+              e.preventDefault();
+            }}
+          >
+            <i
+              className="fas fa-heart"
+              style={{ borderRadius: '50%', color: 'red', fontSize: '1.5rem' }}
+            ></i>
+          </ButtonR>
+          <ButtonR
+            onClick={(e) => {
+              e.preventDefault();
+            }}
+          >
+            <i
+              className="fas fa-surprise"
+              style={{
+                borderRadius: '50%',
+                color: 'orange',
+                fontSize: '1.5rem',
+              }}
+            ></i>
+          </ButtonR>
+          <ButtonR
+            onClick={(e) => {
+              e.preventDefault();
+            }}
+          >
+            <i
+              className="fas fa-sad-tear"
+              style={{
+                borderRadius: '50%',
+                color: 'orange',
+                fontSize: '1.5rem',
+              }}
+            ></i>
+          </ButtonR>
+          <ButtonR
+            onClick={(e) => {
+              e.preventDefault();
+            }}
+          >
+            <i
+              className="fas fa-angry"
+              style={{
+                borderRadius: '50%',
+                color: 'tomato',
+                fontSize: '1.5rem',
+              }}
+            ></i>
+          </ButtonR>
+        </Reaction>
+      ) : (
+        ''
+      )}
       {title}
     </Button>
   );
@@ -177,10 +252,12 @@ const PostActions = () => {
   );
 };
 
-const PostReactions = ({ comments }) => {
+const PostReactions = ({ comments, reactions }) => {
   return (
     <div className="d-flex justify-content-between my-2 mx-3">
-      <p className="mb-0">Vinh Nguyen, Bitna Kim and 21 others</p>
+      <p className="mb-0">
+        {reactions.length !== 0 ? `${reactions.length}  person` : ''}
+      </p>
       <p className="mb-0">
         {comments.length !== 0 ? `${comments.length} comments` : ''}{' '}
       </p>
@@ -252,7 +329,7 @@ export default function Post({ post, modalOpen, setModalOpen, setPostId }) {
         variant="top"
         src="https://images.unsplash.com/photo-1529231812519-f0dcfdf0445f?ixid=MXwxMjA3fDB8MHxzZWFyY2h8Mnx8dGFsZW50ZWR8ZW58MHx8MHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=60"
       />
-      <PostReactions comments={post.comments} />
+      <PostReactions comments={post.comments} reactions={post.reactions} />
       <hr className="my-1" />
       <PostActions />
       <hr className="mt-1" />

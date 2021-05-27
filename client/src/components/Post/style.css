@@ -2,7 +2,7 @@
   padding: 0rem;
 }
 
-.list-group-flush{
+.list-group-flush {
   max-height: 450px;
   overflow: hidden;
   overflow-y: auto;
@@ -17,12 +17,16 @@
   color: grey;
 }
 
+.reaction {
+ 
+}
+
 .comment-bubble {
   padding: 1rem;
   overflow: hidden;
   border-radius: 1rem;
   display: inline-block;
-	-webkit-border-radius: 1rem;
+  -webkit-border-radius: 1rem;
   background-color: var(--bg-primary);
 }
 
@@ -30,62 +34,58 @@
   margin-bottom: 0rem;
 }
 
-.owner-name{
+.owner-name {
   color: black;
 }
 
-.owner-name:hover{
+.owner-name:hover {
   text-decoration: underline;
   color: black !important;
 }
 
-.dropbox{
+.dropbox {
   width: 40px;
   height: 40px;
   border-radius: 50%;
   background: #ccc;
   display: flex;
   justify-content: center;
-  align-items: center;  
+  align-items: center;
   position: absolute;
   right: 20px;
-  color: rgba(0,0,0,0.8) !important;
-
+  color: rgba(0, 0, 0, 0.8) !important;
 }
 
-.dropbox:hover{
-  
+.dropbox:hover {
   cursor: pointer;
   color: black !important;
-
 }
 
 .fa-ellipsis-h:before {
-    content: "\f141";
-    color: black;
+  content: '\f141';
+  color: black;
 }
 
-
-.dropbox-comment{
+.dropbox-comment {
   width: 40px;
   height: 40px;
   border-radius: 50%;
   background: #ccc;
   display: flex;
   justify-content: center;
-  align-items: center;  
+  align-items: center;
   position: absolute;
   top: 15px;
   right: 20px;
-  color: rgba(0,0,0,0.8) !important;
+  color: rgba(0, 0, 0, 0.8) !important;
 }
 
-.dropbox-comment:hover{
+.dropbox-comment:hover {
   cursor: pointer;
   color: black !important;
 }
 
-.dropdown-menu.show.dropdown-menu-right{
+.dropdown-menu.show.dropdown-menu-right {
   transform: translate(-100px, 42px) !important;
   z-index: 1000;
 }
