@@ -10,8 +10,9 @@ const initialState = {
 
 const postReducer = (state = initialState, action) => {
   const { type, payload } = action;
-
+  let idu, idz;
   switch (type) {
+    case commentTypes.UPDATE_COMMENT:
     case commentTypes.DELETE_COMMENT:
     case commentTypes.CREATE_COMMENT:
     case types.POST_REQUEST:
@@ -46,7 +47,7 @@ const postReducer = (state = initialState, action) => {
         loading: false,
         selectedBlog: payload,
       };
-
+    case commentTypes.UPDATE_COMMENT_FAILURE:
     case commentTypes.DELETE_COMMENT_FAILURE:
     case commentTypes.CREATE_COMMENT_FAILURE:
     case types.CREATE_POST_FAILURE:
@@ -61,6 +62,18 @@ const postReducer = (state = initialState, action) => {
         ...state,
         loading: false,
         posts: [payload, ...state.posts],
+      };
+
+    case commentTypes.UPDATE_COMMENT_SUCCESS:
+      idu = state.posts.findIndex((post) => post._id === payload.post);
+      let idz = state.posts[idu].comments.findIndex(
+        (comment) => comment._id === payload._id
+      );
+      state.posts[idu].comments[idz] = payload;
+      return {
+        ...state,
+        loading: false,
+        posts: [...state.posts],
       };
 
     case types.DELETE_POST_SUCCESS:

@@ -33,19 +33,15 @@ commentsController.read = async (req, res) => {
 };
 
 commentsController.update = async (req, res) => {
-  await Comment.findByIdAndUpdate(
-    { _id: req.params.id },
-    { email: req.body.email },
-    { new: true },
-    (err, comment) => {
-      console.log({ err, comment });
-      if (!comment) {
-        res.status(404).json({ message: 'Comment not found.' });
-      } else {
-        res.json(comment);
-      }
-    }
+  let newComment = await Comment.findByIdAndUpdate(
+    { _id: req.params.commentId },
+    { ...req.body },
+    { new: true }
   );
+  if (!newComment)
+    return res.status(404).json({ message: 'Comment not found' });
+  let comment = await Comment.findById(req.params.commentId).populate('owner');
+  res.status(200).json(comment);
 };
 
 commentsController.destroy = async (req, res) => {

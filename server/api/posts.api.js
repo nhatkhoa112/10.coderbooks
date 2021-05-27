@@ -17,6 +17,13 @@ router.delete(
   authMiddleware.loginRequired,
   commentsController.destroy
 );
+
+router.patch(
+  '/:postId/comments/:commentId',
+  authMiddleware.loginRequired,
+  commentsController.update
+);
+
 router.get('/:id', postsController.read);
 router.post('/:id', postsController.read);
 router.post('/', authMiddleware.loginRequired, postsController.create);

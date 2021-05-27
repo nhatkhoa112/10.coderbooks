@@ -48,22 +48,24 @@ const CommentForm = ({ postId, comments }) => {
   );
 };
 
-const Comment = (props) => {
-  const commentId = props._id;
-  const postId = props.post._id;
+const Comment = ({ comment, isEdit, setIsEdit }) => {
+  const commentId = comment._id;
+  const postId = comment.post._id;
+  const [bodyComment, setBodyComment] = useState('');
   const user = useSelector((state) => state.auth.user);
   const dispatch = useDispatch();
-  // const handleDeleteComment = (e) => {
-  //   console.log({ commentId, postId });
-  //   e.preventDefault();
-  // };
+  const handleUpdateComment = (e) => {
+    e.preventDefault();
+    dispatch(commentActions.updateComment(commentId, postId, bodyComment));
+    setIsEdit(false);
+  };
 
   return (
     <ListGroupItem className="justify-content-start border-bottom-0 pr-0 py-0">
-      <Nav.Link as={Link} to={`/${props.owner.name}`}>
+      <Nav.Link as={Link} to={`/${comment.owner.name}`}>
         <Avatar
           url={
-            props.owner.avatarUrl ||
+            comment.owner.avatarUrl ||
             'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAOEAAADhCAMAAAAJbSJIAAAAMFBMVEX///+/v7+7u7vAwMDe3t729vbHx8fx8fHs7OzS0tLMzMzV1dXDw8PIyMjh4eHp6ek8KxbMAAAKtklEQVR4nO1d6bqjKhCMKO7R93/bCSiKigJNoTLfqT937kmCFL2ytZ/PH/5gA6+HoevassyzFXlZtl03DDV/unsh+FHrvjkTyMyQn+XfLkWiddFk58wMTLOmqJ/utDPqojRwY3sYvlEmwJIP7b7vQhHLpijGmvNJGX//rceiaMr8QJSxdnixxvKd8H7975tivOoxH4umZ7tflcU7SQ7ltp9ZM1SOP60GYbX6r8shal8JqDfKKdj5ioELlht1fZNNFjnTulYWrrLbo9qoOcsLaC/J4I3eqzLQUXBd2RlrnrfIqtU61ENcBC96rc2WqhAYaPx+443rS6XpxZMcdX492vkN/eMcf/a3Wp+j3/tlqm2fi8jwy0ZH25dXi3zEHjvfIa67chfaMxtHXUk6QJ99MHq6gqrLDGm4vdu6I7ONBxL8y7z4aTa1o1haf75yZN/bVLVYnulkf4VJfKsKWJtY7ZHdkwJUq0Bc9Ga44ie7nXc2kotNsP4Gr7oK0MX2qzP93JJkeXOd6nW3iXGxQFa6GEXnwk/1PesumuRKVSNb47gMpUuA504C1Em2F70flmdHdKpKJJc9WTB68pMtX6g+V141XmxcNNTJFnw0VMeFPRaLpqIobVCpYe6dDKEhErw0gFXvI/jU0U9FWipBi4oshgI3xsKv5QCCFoqjl6m4Qw1d7uaqySrqMIx83h3A+ptZJKx1+3oRRvD3oMuB9OyNC0q/UatDCWZZefkApVHX3/KAIug6jQ/mZzX3AUuxdHroihbAMMuunzEiKSqCrhGIksocYRvPCkdxJpg557sIfj/Y3AjPQBS9CQb7UQXbg0AUlU25z1hA/CwBQ0BRDAoayi27ExxQInRwbDPFkNBfeBP89CCCTrFJUSQncLNXtOvLigolwixzkQyfe0hMw+feOocJgQ5G0IkhqY8rMsL45Bdd9oSbA1HRl0LwOxH02nHhOCXNHOfxs2sjzPonN+rpp2CeNHOPc6SOfhbpe8aaBkfQPZJPMdvX28zqlvv9ChcrfBjOxu/j8j+LEfouvgKV1GN0OcEUp1DvHWaA0dBLfyaT8gn8VZjxguDx4NnbuEfFyZx6X4JQV+oX4jx7POuo/w4IMKP5Pd/nydxLT/2+rQMZLDzTFC+pTH6UMuv6PsdwjopO/nSk6uizDLm7+5et+6Wjm5+i4GWHn8XN2b84eQva4gfUlXpr0bSkZA1xnK6jTzN07HrjNhBmIAkSZrWT+jXXX6pclfkGhv5LEy4j0xLblkDOf0nObgoDl3FuEiF1jRXL0KZuJkhncynESYTUI+RghgRbqW1CrOxSvpMhQZcmEZ0L0fb5zQwJMcsiIx4mQjxDgsdrL4dGxkK6CPEMCanjJMQzJxUowlcwnIVo/kxOsQJE+AotnYR4MrmVi3JB+41YgsTRljHRuIwlYwk5FkZhSMr/z3lIBfZffYrIkJgey1UpkzuR1MNuvoDtkOj05FTY4GvO/v4cQ/LW7omspIESkt1DGziGVLcu4/rBZfLQUCGAOQ21gNqNKWDs3VQhmgzzM+AVYepCw2f2NXsdL01/9AV0VT9AoaS4dmrKjYL1BXTvKUChTGzk6IefggPukAYFrvLYQBva5gSkmgb3YxtOIUr6AcaLsIPq/BDca4ySIqcXYf2QaqrnptL5QI73g/Q09DrFgZCkjLmGgtHTwORq8uq6UsqBD2xUbzsUvqdcjhCtaIYozTB02BQAqRtAnURuqhmi0FpArJgQbomI2zCyF6shSsKwq5mhBCH2wrdqiWp2QqglYrRpw4kjzfATfnAI0omNXgpHAzNDAer10QmYsRaGuLga+T/QS5lBIsRcLKx0sYmJa+AKzQ4h10rCFjRXiC4opyyOwYRO7w3NUxmCuiBmcuoAkVjsBjoagYCwj+qJcDUqN9oGRwjoYR+lpFMaM/1TBAv01eiAWRSqCyJmzeGiZsiMZgaZIUyZ+BouZLBAtatAPcQHHOo1XAiG4dOVHahLp8D72fnCUHQGditagXifG+ZnPtNcfAqIgiE4WHzIhgjsQbMwFLELX7mHdiIaOdIiXExKX+KLTHyIagoNWiJ1nKyvjFEphLYkBQ1a48Iwxxq4AmkijOxAvcQI9NgpEIQIzf9lXiX/FYshITcFRsM7GBLUNCJDZMsLHmb4ic/Q/9pzagz990ux6fEbGWL78UqG0Lgc3ZdSkm9k/a740YKSmSKVKTrDysbGCODkYmUYJS+tiVX3gLsLa14aYW5R+1Yu1SjCJnLjZvaEnR+GVU3sQcO9zg/Rc3yaAeocMatG6xwfvE4DKTuA8HzrOg12rQ10oAZ0Pqtb+gRLCFEn2wAdyjcrwqhIizu6F65V65o3cN8ibHt7AxbqGrR9C9jeEy9xBMMjmLb3hNo/hFVMVBTDRl3bP8TsAY85mGAoRX0PGLCPP+D5ZYFJqr6PH3oWw/wCEgjFgPmifhYj6DzN5u1MeIrkJHVznoZ+Jmr/trwYHLOGRHJzJop4rm3sohifgSRr/Oev2/OWsh2v35vfUxmRZNZ5mtGWk9/5UvniphvZKZK9z0vrdnrpfEaYj8+wmzmy1tkkd2eEXc5587pos+fYKZKXL6PRsDvnbTurz0fxstCHySmw0rXalR7jL+5b8OEFotvC4UWEh/sWZ3dmxuZt7GbYXiZ5IGS89zQeXu37Jly7ncO9J9PdtZjJGAbnQfJ4d81w/xA4XY+IE99quH94vEOaBEEB0/zDcIf0cHMWPWGPiUOyYrzVvL/Ljax5HB3719yZ7nLv7+NDb2XfgO2ylfE+/q6mArZ2wA3QX41krqmwq4sBrI9/EzSK5roY29omqSmpwLqELJkYpkr634unu0uB6vxpHRq9xhC2DMtdmFmd1hjS6yslqKQC3Z7HDmutL2xt9fvAFv0zb86t9dqSixUzhOSu6rWtNfeSSmh0dNc195a6iejaefehtdRNVLUvAe8vfAi9pfal+jjJaCjR2wqUziLGvgDgTuTWGrPgcmQP4eosdYr56AHXG4X/gxCvj8P/B0K07fWm62UUbBuh6Ub7GfZdwlRzUgWHsw1PdzEQdoLJTp0k3A4ZYd+Hcy/c3r2WsLNxPYyQ0or+Bu7HGVOdAbsfzks0s/E5uZaknvoduU3Rn/q9TjZBf+p7VD25uO9/oDiNffwFlLO2aZki4Z3OiaXgFIIpRUXqGe5kvA392kIigT/kdk0SDjWsKG8Kq4uBxTTev98dfI3v7RQBt1/fTRFyvffNFEH3l99LEXZB+60UgdUeg4okxAKD1lx6YehHVN/X8boEDl/q8WVpeIxKj8EFPaCAlpBf8H2LGBlpRu+Cl/gbtI/R8QpjjGGCK/jjmsq+USqvaXg4bESoB3xA9eCVL9bH8aF7PCbGOwQ44RlrjG+BOsYHGEZ1oQbcHBtjxsAz8EbjGOMWkdYma+5U0BWVNm3McyxJvT3W3uNB7+T4Fn57jiCSm1ae5ifws0cgyS29p+zvgGJTqIZOcvtLlt8W4B1Qb6sT5P4sdz9hrI3wNoMwDLt6dLkzzeM3WYl80R0OhqpR+TVP08eMldc1L54FH0zFNPIzHL75U06fSkIPgVpDSgjvdbZ3iroQdV9ceYpvNgmxU+D10H1zxs6Zys/ybzfU79fMC/yIDl3XlqVudXlZtl03JE7tDzfhH+srhEhp1oyLAAAAAElFTkSuQmCC'
           }
         />
@@ -73,21 +75,41 @@ const Comment = (props) => {
           <Nav.Link
             className="owner-name"
             as={Link}
-            to={`/${props.owner.name}`}
+            to={`/${comment.owner.name}`}
             style={{ color: 'black' }}
           >
-            <div className="font-weight-bold">{props.owner.name}</div>
+            <div className="font-weight-bold">{comment.owner.name}</div>
           </Nav.Link>
-          <p>{props.body}</p>
-          {user.email === props.owner.email ? (
+          {isEdit ? (
+            <form onSubmit={handleUpdateComment}>
+              <input
+                style={{
+                  border: '1px solid #ccc',
+                  background: 'transparent',
+                  color: 'black',
+                  padding: '0 10px',
+                  outline: 'none',
+                }}
+                type="text"
+                placeholder="Enter the comment"
+                value={bodyComment}
+                onChange={(e) => setBodyComment(e.target.value)}
+              />
+            </form>
+          ) : (
+            <p>{comment.body}</p>
+          )}
+
+          {user.email === comment.owner.email ? (
             <div className="dropbox-comment">
               <NavDropdown
                 alignRight
                 id="dropdown-basic"
                 title={<i className="fas fa-ellipsis-h"></i>}
               >
-                <NavDropdown.Divider />
-                <NavDropdown.Item>Edit</NavDropdown.Item>
+                <NavDropdown.Item onClick={() => setIsEdit(!isEdit)}>
+                  Edit
+                </NavDropdown.Item>
                 <NavDropdown.Item
                   onClick={() =>
                     dispatch(commentActions.deleteComment(commentId, postId))
@@ -111,7 +133,12 @@ const PostComments = (props) => {
     <Card.Body>
       <ListGroup className="list-group-flush">
         {props.comments.map((c, index) => (
-          <Comment key={index} {...c} />
+          <Comment
+            key={index}
+            comment={c}
+            isEdit={props.isEdit}
+            setIsEdit={props.setIsEdit}
+          />
         ))}
       </ListGroup>
     </Card.Body>
@@ -188,7 +215,6 @@ function PostHeader({
           id="dropdown-basic"
           title={<i className="fas fa-ellipsis-h"></i>}
         >
-          <NavDropdown.Divider />
           <NavDropdown.Item
             onClick={() => {
               if (user.email === userMakePost.email) {
@@ -211,6 +237,8 @@ function PostHeader({
 }
 
 export default function Post({ post, modalOpen, setModalOpen, setPostId }) {
+  const [isEdit, setIsEdit] = useState(false);
+
   return (
     <Card className="p-3 mb-3 shadow rounded-md">
       <PostHeader
@@ -229,7 +257,11 @@ export default function Post({ post, modalOpen, setModalOpen, setPostId }) {
       <hr className="my-1" />
       <PostActions />
       <hr className="mt-1" />
-      <PostComments comments={post.comments} />
+      <PostComments
+        comments={post.comments}
+        isEdit={isEdit}
+        setIsEdit={setIsEdit}
+      />
       <CommentForm postId={post._id} />
     </Card>
   );
