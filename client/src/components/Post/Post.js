@@ -164,7 +164,9 @@ const PostActionButton = ({ a, post }) => {
   const userReaction = post.reactions.filter(
     (reaction) => reaction.owner.email === user.email
   );
+  const userReactionId = userReaction._id;
   const postId = post._id;
+
   return (
     <Button
       className="bg-light bg-white text-dark border-0 position-relative"
@@ -188,10 +190,18 @@ const PostActionButton = ({ a, post }) => {
                 if (userReaction[0].enum !== 'Like') {
                   dispatch(reactionActions.createReaction(postId, 'Like'));
                 } else {
-                  dispatch(reactionActions.deleteReaction(postId, 'Like'));
+                  dispatch(
+                    reactionActions.deleteReaction(
+                      postId,
+                      userReactionId,
+                      'Like'
+                    )
+                  );
                 }
               } else {
-                dispatch(reactionActions.updateReaction(postId, 'Like'));
+                dispatch(
+                  reactionActions.updateReaction(postId, userReactionId, 'Like')
+                );
               }
             }}
           >
@@ -211,10 +221,18 @@ const PostActionButton = ({ a, post }) => {
                 if (userReaction[0].enum !== 'Love') {
                   dispatch(reactionActions.createReaction(postId, 'Love'));
                 } else {
-                  dispatch(reactionActions.deleteReaction(postId, 'Love'));
+                  dispatch(
+                    reactionActions.deleteReaction(
+                      postId,
+                      userReactionId,
+                      'Love'
+                    )
+                  );
                 }
               } else {
-                dispatch(reactionActions.updateReaction(postId, 'Love'));
+                dispatch(
+                  reactionActions.updateReaction(postId, userReactionId, 'Love')
+                );
               }
             }}
           >
@@ -234,10 +252,22 @@ const PostActionButton = ({ a, post }) => {
                 if (userReaction[0].enum !== 'Surprise') {
                   dispatch(reactionActions.createReaction(postId, 'Surprise'));
                 } else {
-                  dispatch(reactionActions.deleteReaction(postId, 'Surprise'));
+                  dispatch(
+                    reactionActions.deleteReaction(
+                      postId,
+                      userReactionId,
+                      'Surprise'
+                    )
+                  );
                 }
               } else {
-                dispatch(reactionActions.updateReaction(postId, 'Surprise'));
+                dispatch(
+                  reactionActions.updateReaction(
+                    postId,
+                    userReactionId,
+                    'Surprise'
+                  )
+                );
               }
             }}
           >
@@ -257,10 +287,18 @@ const PostActionButton = ({ a, post }) => {
                 if (userReaction[0].enum !== 'Sad') {
                   dispatch(reactionActions.createReaction(postId, 'Sad'));
                 } else {
-                  dispatch(reactionActions.deleteReaction(postId, 'Sad'));
+                  dispatch(
+                    reactionActions.deleteReaction(
+                      postId,
+                      userReactionId,
+                      'Sad'
+                    )
+                  );
                 }
               } else {
-                dispatch(reactionActions.updateReaction(postId, 'Sad'));
+                dispatch(
+                  reactionActions.updateReaction(postId, userReactionId, 'Sad')
+                );
               }
             }}
           >
@@ -280,10 +318,22 @@ const PostActionButton = ({ a, post }) => {
                 if (userReaction[0].enum !== 'Angry') {
                   dispatch(reactionActions.createReaction(postId, 'Angry'));
                 } else {
-                  dispatch(reactionActions.deleteReaction(postId, 'Angry'));
+                  dispatch(
+                    reactionActions.deleteReaction(
+                      postId,
+                      userReactionId,
+                      'Angry'
+                    )
+                  );
                 }
               } else {
-                dispatch(reactionActions.updateReaction(postId, 'Angry'));
+                dispatch(
+                  reactionActions.updateReaction(
+                    postId,
+                    userReactionId,
+                    'Angry'
+                  )
+                );
               }
             }}
           >
