@@ -26,7 +26,6 @@ export const ModalUpdate = ({
   const user = useSelector((state) => state.auth.user);
 
   const selectedBlog = useSelector((state) => state.post.selectedBlog);
-  console.log(selectedBlog);
   const [postBody, setPostBody] = useState('');
   const handleSubmitPost = (e) => {
     e.preventDefault();
@@ -41,7 +40,6 @@ export const ModalUpdate = ({
   }, [selectedBlog]);
 
   const handleSubmit = (e) => {
-    console.log(postBody);
     dispatch(postActions.updatePost(postId, postBody));
     setModalOpen(false);
     setPostBody('');

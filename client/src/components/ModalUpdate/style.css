@@ -1,17 +1,14 @@
-.fade.modal.show{
-    display: flex !important;
-    justify-content: center !important;
-    margin-top: 200px;;
+.fade.modal.show {
+  display: flex !important;
+  justify-content: center !important;
+  /* margin-top: 200px;; */
 }
 
-.modal-dialog.modal-xl{
-    max-width: 41.666667% !important;
-    padding: 0 !important;
-   
+.modal-dialog.modal-xl {
+  max-width: 41.666667% !important;
+  padding: 0 !important;
 }
-
-
 
 .modal-body {
-    padding: 0 !important;
+  /* padding: 0 !important; */
 }

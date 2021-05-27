@@ -14,7 +14,6 @@ const PublicNavbar = () => {
   const dispatch = useDispatch();
   const { loading, isAuthenticated } = useSelector((state) => state.auth);
   const user = useSelector((state) => state.auth.user);
-  console.log(user);
 
   const handleLogout = () => {
     dispatch(authActions.logout());

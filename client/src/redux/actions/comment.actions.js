@@ -17,6 +17,18 @@ const createComment = (postId, body) => async (dispatch) => {
   }
 };
 
+const deleteComment = (commentId, postId) => async (dispatch) => {
+  dispatch({ type: types.DELETE_COMMENT, payload: null });
+  try {
+    const res = await api.delete(`/posts/${postId}/comments/${commentId}`);
+    // console.log(res.data);
+    dispatch({ type: types.DELETE_COMMENT_SUCCESS, payload: res.data });
+  } catch (error) {
+    dispatch({ type: types.DELETE_COMMENT_FAILURE, payload: null });
+  }
+};
+
 export const commentActions = {
   createComment,
+  deleteComment,
 };

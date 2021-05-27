@@ -49,7 +49,15 @@ const CommentForm = ({ postId, comments }) => {
 };
 
 const Comment = (props) => {
+  const commentId = props._id;
+  const postId = props.post._id;
   const user = useSelector((state) => state.auth.user);
+  const dispatch = useDispatch();
+  // const handleDeleteComment = (e) => {
+  //   console.log({ commentId, postId });
+  //   e.preventDefault();
+  // };
+
   return (
     <ListGroupItem className="justify-content-start border-bottom-0 pr-0 py-0">
       <Nav.Link as={Link} to={`/${props.owner.name}`}>
@@ -80,7 +88,13 @@ const Comment = (props) => {
               >
                 <NavDropdown.Divider />
                 <NavDropdown.Item>Edit</NavDropdown.Item>
-                <NavDropdown.Item>Delete</NavDropdown.Item>
+                <NavDropdown.Item
+                  onClick={() =>
+                    dispatch(commentActions.deleteComment(commentId, postId))
+                  }
+                >
+                  Delete
+                </NavDropdown.Item>
               </NavDropdown>
             </div>
           ) : (
@@ -96,8 +110,8 @@ const PostComments = (props) => {
   return (
     <Card.Body>
       <ListGroup className="list-group-flush">
-        {props.comments.map((c) => (
-          <Comment key={c.id} {...c} />
+        {props.comments.map((c, index) => (
+          <Comment key={index} {...c} />
         ))}
       </ListGroup>
     </Card.Body>
