@@ -1,17 +1,21 @@
-import React, { useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-
 import { Row, Col, Nav, Button, Container, ButtonGroup } from 'react-bootstrap';
-
+import { postActions } from '../../redux/actions';
 import './style.css';
-
+import { ModalUpdate } from '../../components/ModalUpdate/ModalUpdate';
 import Composer from '../../components/Composer/Composer';
+import Post from '../../components/Post/Post';
 
 export default function ProfilePage() {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.auth.user);
+  const posts = useSelector((state) => state.post.posts);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [postId, setPostId] = useState('');
+  const userEmail = user.email;
   useEffect(() => {
-    
+    dispatch(postActions.getPostsByUser(userEmail));
   }, [dispatch]);
   return (
     <div>
@@ -103,7 +107,22 @@ export default function ProfilePage() {
           </Col>
           <Col xs={7} className="posts-col">
             <Composer />
-            <h1>Post</h1>
+            <ModalUpdate
+              modalOpen={modalOpen}
+              setModalOpen={setModalOpen}
+              postId={postId}
+            />
+            {posts?.map((post, index) => {
+              return (
+                <Post
+                  key={index}
+                  post={post}
+                  modalOpen={modalOpen}
+                  setModalOpen={setModalOpen}
+                  setPostId={setPostId}
+                />
+              );
+            })}
           </Col>
         </Container>
       </Row>

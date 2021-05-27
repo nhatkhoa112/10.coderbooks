@@ -149,6 +149,41 @@ const createPostReaction =
     }
   };
 
+const getPostsByUser =
+  (
+    pageNum = 1,
+    limit = 20,
+    query = null,
+    ownerId = null,
+    sortBy = null,
+    userEmail
+  ) =>
+  async (dispatch) => {
+    dispatch({ type: types.GET_POSTS_BY_USER, payload: null });
+    try {
+      let queryString = '';
+      if (query) {
+        queryString = `&title[$regex]=${query}&title[$options]=i`;
+      }
+      if (ownerId) {
+        queryString = `${queryString}&author=${ownerId}`;
+      }
+      let sortByString = '';
+      if (sortBy?.key) {
+        sortByString = `&sortBy[${sortBy.key}]=${sortBy.ascending}`;
+      }
+      const res = await api.get(
+        `/posts/${userEmail}?page=${pageNum}&limit=${limit}${queryString}${sortByString}`
+      );
+      dispatch({
+        type: types.GET_POSTS_BY_USER_SUCCESS,
+        payload: res.data.data,
+      });
+    } catch (error) {
+      dispatch({ type: types.GET_POSTS_BY_USER_FAILURE, payload: error });
+    }
+  };
+
 export const postActions = {
   postsRequest,
   getSinglePost,
@@ -157,4 +192,5 @@ export const postActions = {
   updatePost,
   deletePost,
   createPostReaction,
+  getPostsByUser,
 };

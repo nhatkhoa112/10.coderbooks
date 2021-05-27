@@ -18,6 +18,12 @@ router.delete(
   commentsController.destroy
 );
 
+router.get(
+  '/:userEmail',
+  authMiddleware.loginRequired,
+  postsController.getPostsByUserEmail
+);
+
 router.patch(
   '/:postId/comments/:commentId',
   authMiddleware.loginRequired,

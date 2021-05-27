@@ -15,6 +15,7 @@ const postReducer = (state = initialState, action) => {
     case commentTypes.UPDATE_COMMENT:
     case commentTypes.DELETE_COMMENT:
     case commentTypes.CREATE_COMMENT:
+    case types.GET_POSTS_BY_USER:
     case types.POST_REQUEST:
     case types.CREATE_POST_REQUEST:
       return { ...state, loading: true };
@@ -24,6 +25,9 @@ const postReducer = (state = initialState, action) => {
       return { ...state, loading: true };
     case types.GET_SINGLE_POST_REQUEST:
       return { ...state, loading: true };
+
+    case types.GET_POSTS_BY_USER_SUCCESS:
+      return { ...state, loading: false, posts: [...payload.posts] };
 
     case types.POST_REQUEST_SUCCESS:
       return {
@@ -50,6 +54,7 @@ const postReducer = (state = initialState, action) => {
     case commentTypes.UPDATE_COMMENT_FAILURE:
     case commentTypes.DELETE_COMMENT_FAILURE:
     case commentTypes.CREATE_COMMENT_FAILURE:
+    case types.GET_POSTS_BY_USER_FAILURE:
     case types.CREATE_POST_FAILURE:
     case types.UPDATE_POST_FAILURE:
     case types.DELETE_POST_FAILURE:

@@ -119,4 +119,23 @@ postController.createComment = async (req, res) => {
   return sendResponse(res, 200, true, { post }, null, 'Comment created!');
 };
 
+postController.getPostsByUserEmail = async (req, res) => {
+  const page = parseInt(req.query.page);
+  const limit = parseInt(req.query.limit);
+  let skip = page === 0 ? 0 : (page - 1) * limit;
+  const posts = await Post.find({ owner: req.userId })
+    .populate('owner')
+    .populate('comments')
+    .populate({
+      path: 'comments',
+      populate: {
+        path: 'owner',
+      },
+    })
+    .skip(skip)
+    .sort({ _id: -1 })
+    .limit(limit);
+  return sendResponse(res, 200, true, { posts }, null, 'Received posts');
+};
+
 module.exports = postController;

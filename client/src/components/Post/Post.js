@@ -48,9 +48,10 @@ const CommentForm = ({ postId, comments }) => {
   );
 };
 
-const Comment = ({ comment, isEdit, setIsEdit }) => {
+const Comment = ({ comment }) => {
   const commentId = comment._id;
   const postId = comment.post._id;
+  const [isEdit, setIsEdit] = useState(false);
   const [bodyComment, setBodyComment] = useState('');
   const user = useSelector((state) => state.auth.user);
   const dispatch = useDispatch();
@@ -237,8 +238,6 @@ function PostHeader({
 }
 
 export default function Post({ post, modalOpen, setModalOpen, setPostId }) {
-  const [isEdit, setIsEdit] = useState(false);
-
   return (
     <Card className="p-3 mb-3 shadow rounded-md">
       <PostHeader
@@ -257,11 +256,7 @@ export default function Post({ post, modalOpen, setModalOpen, setPostId }) {
       <hr className="my-1" />
       <PostActions />
       <hr className="mt-1" />
-      <PostComments
-        comments={post.comments}
-        isEdit={isEdit}
-        setIsEdit={setIsEdit}
-      />
+      <PostComments comments={post.comments} />
       <CommentForm postId={post._id} />
     </Card>
   );
