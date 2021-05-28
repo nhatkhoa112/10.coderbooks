@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { Reaction, ButtonR } from './PostElement.js';
+import { Reaction, ButtonR, IconContainer, IconStyle } from './PostElement.js';
 import {
   Col,
   Form,
@@ -164,7 +164,10 @@ const PostActionButton = ({ a, post }) => {
   const userReaction = post.reactions.filter(
     (reaction) => reaction.owner.email === user.email
   );
-  const userReactionId = userReaction._id;
+  let userReactionId;
+  if (userReaction.length > 0) {
+    userReactionId = userReaction[0]._id;
+  }
   const postId = post._id;
 
   return (
@@ -187,21 +190,21 @@ const PostActionButton = ({ a, post }) => {
             onClick={(e) => {
               e.preventDefault();
               if (userReaction.length !== 0) {
-                if (userReaction[0].enum !== 'Like') {
-                  dispatch(reactionActions.createReaction(postId, 'Like'));
-                } else {
+                if (userReaction[0].type[0] !== 'Like') {
                   dispatch(
-                    reactionActions.deleteReaction(
+                    reactionActions.updateReaction(
                       postId,
                       userReactionId,
                       'Like'
                     )
                   );
+                } else {
+                  dispatch(
+                    reactionActions.deleteReaction(postId, userReactionId)
+                  );
                 }
               } else {
-                dispatch(
-                  reactionActions.updateReaction(postId, userReactionId, 'Like')
-                );
+                dispatch(reactionActions.createReaction(postId, 'Like'));
               }
             }}
           >
@@ -218,21 +221,21 @@ const PostActionButton = ({ a, post }) => {
             onClick={(e) => {
               e.preventDefault();
               if (userReaction.length !== 0) {
-                if (userReaction[0].enum !== 'Love') {
-                  dispatch(reactionActions.createReaction(postId, 'Love'));
-                } else {
+                if (userReaction[0].type[0] !== 'Love') {
                   dispatch(
-                    reactionActions.deleteReaction(
+                    reactionActions.updateReaction(
                       postId,
                       userReactionId,
                       'Love'
                     )
                   );
+                } else {
+                  dispatch(
+                    reactionActions.deleteReaction(postId, userReactionId)
+                  );
                 }
               } else {
-                dispatch(
-                  reactionActions.updateReaction(postId, userReactionId, 'Love')
-                );
+                dispatch(reactionActions.createReaction(postId, 'Love'));
               }
             }}
           >
@@ -249,25 +252,21 @@ const PostActionButton = ({ a, post }) => {
             onClick={(e) => {
               e.preventDefault();
               if (userReaction.length !== 0) {
-                if (userReaction[0].enum !== 'Surprise') {
-                  dispatch(reactionActions.createReaction(postId, 'Surprise'));
-                } else {
+                if (userReaction[0].type[0] !== 'Surprise') {
                   dispatch(
-                    reactionActions.deleteReaction(
+                    reactionActions.updateReaction(
                       postId,
                       userReactionId,
                       'Surprise'
                     )
                   );
+                } else {
+                  dispatch(
+                    reactionActions.deleteReaction(postId, userReactionId)
+                  );
                 }
               } else {
-                dispatch(
-                  reactionActions.updateReaction(
-                    postId,
-                    userReactionId,
-                    'Surprise'
-                  )
-                );
+                dispatch(reactionActions.createReaction(postId, 'Surprise'));
               }
             }}
           >
@@ -284,21 +283,21 @@ const PostActionButton = ({ a, post }) => {
             onClick={(e) => {
               e.preventDefault();
               if (userReaction.length !== 0) {
-                if (userReaction[0].enum !== 'Sad') {
-                  dispatch(reactionActions.createReaction(postId, 'Sad'));
-                } else {
+                if (userReaction[0].type[0] !== 'Sad') {
                   dispatch(
-                    reactionActions.deleteReaction(
+                    reactionActions.updateReaction(
                       postId,
                       userReactionId,
                       'Sad'
                     )
                   );
+                } else {
+                  dispatch(
+                    reactionActions.deleteReaction(postId, userReactionId)
+                  );
                 }
               } else {
-                dispatch(
-                  reactionActions.updateReaction(postId, userReactionId, 'Sad')
-                );
+                dispatch(reactionActions.createReaction(postId, 'Sad'));
               }
             }}
           >
@@ -315,25 +314,21 @@ const PostActionButton = ({ a, post }) => {
             onClick={(e) => {
               e.preventDefault();
               if (userReaction.length !== 0) {
-                if (userReaction[0].enum !== 'Angry') {
-                  dispatch(reactionActions.createReaction(postId, 'Angry'));
-                } else {
+                if (userReaction[0].type[0] !== 'Angry') {
                   dispatch(
-                    reactionActions.deleteReaction(
+                    reactionActions.updateReaction(
                       postId,
                       userReactionId,
                       'Angry'
                     )
                   );
+                } else {
+                  dispatch(
+                    reactionActions.deleteReaction(postId, userReactionId)
+                  );
                 }
               } else {
-                dispatch(
-                  reactionActions.updateReaction(
-                    postId,
-                    userReactionId,
-                    'Angry'
-                  )
-                );
+                dispatch(reactionActions.createReaction(postId, 'Angry'));
               }
             }}
           >
@@ -366,10 +361,59 @@ const PostActions = ({ post }) => {
 };
 
 const PostReactions = ({ comments, reactions }) => {
+  const user = useSelector((state) => state.auth.user);
+  const userReaction = reactions.filter(
+    (reaction) => reaction.owner.email === user.email
+  );
+  const icons = [
+    { type: 'Like', className: 'far fa-thumbs-up', color: 'blue' },
+    { type: 'Love', className: 'fas fa-heart', color: 'red' },
+    { type: 'Surprise', className: 'fas fa-surprise', color: 'orange' },
+    { type: 'Sad', className: 'far fa-sad-tear', color: 'orange' },
+    { type: 'Angry', className: 'far fa-angry', color: 'tomato' },
+  ];
   return (
     <div className="d-flex justify-content-between my-2 mx-3">
-      <p className="mb-0">
-        {reactions.length !== 0 ? `${reactions.length}  person` : ''}
+      <p className="mb-0 d-flex justify-content-between">
+        {icons.map((icon) => {
+          if (icon.type === userReaction[0]?.type[0]) {
+            return (
+              <IconContainer color={icon.color}>
+                <IconStyle
+                  className={icon.className}
+                  color={icon.color}
+                ></IconStyle>
+              </IconContainer>
+            );
+          }
+        })}
+        {/* {userReaction[0]?.type[0] === 'Like' ? (
+          <div
+            style={{
+              width: '2rem',
+              height: '2rem',
+              borderRadius: '50%',
+              background: 'blue',
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              marginRight: '10px',
+            }}
+          >
+            <i
+              className="far fa-thumbs-up"
+              style={{
+                borderRadius: '50%',
+                color: 'white',
+                fontSize: '1rem',
+              }}
+            ></i>
+          </div>
+        ) : (
+          ''
+        )} */}
+        {userReaction.length > 0 ? 'you' : ''}{' '}
+        {reactions.length > 1 ? `and ${reactions.length - 1} people` : ''}
       </p>
       <p className="mb-0">
         {comments.length !== 0 ? `${comments.length} comments` : ''}{' '}

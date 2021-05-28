@@ -33,6 +33,18 @@ const postReducer = (state = initialState, action) => {
     case types.GET_POSTS_BY_USER_SUCCESS:
       return { ...state, loading: false, posts: [...payload.posts] };
 
+    case commentTypes.DELETE_COMMENT_SUCCESS:
+      let ids = state.posts.findIndex((post) => post._id === payload.post);
+      state.posts[ids].comments = state.posts[ids].comments.filter(
+        (comment) => comment._id !== payload._id
+      );
+
+      return {
+        ...state,
+        loading: true,
+        posts: [...state.posts],
+      };
+
     case types.POST_REQUEST_SUCCESS:
       return {
         ...state,
@@ -47,7 +59,10 @@ const postReducer = (state = initialState, action) => {
       return { ...state, loading: false, posts: [...state.posts] };
 
     case reactionTypes.CREATE_REACTION_SUCCESS:
-      return { ...state, loading: false };
+      let idu = state.posts.findIndex((post) => post._id === payload._id);
+      state.posts[idu] = payload;
+
+      return { ...state, loading: false, posts: [...state.posts] };
 
     case types.GET_SINGLE_POST_REQUEST_SUCCESS:
       return { ...state, selectedBlog: payload.posts[0], loading: false };
@@ -92,9 +107,15 @@ const postReducer = (state = initialState, action) => {
       };
 
     case reactionTypes.UPDATE_REACTION_SUCCESS:
+      let ide = state.posts.findIndex((post) => post._id === payload.post);
+      let idw = state.posts[ide].reactions.findIndex(
+        (reaction) => reaction._id === payload._id
+      );
+      state.posts[ide].reactions[idw] = payload;
       return {
         ...state,
         loading: false,
+        posts: [...state.posts],
       };
 
     case types.DELETE_POST_SUCCESS:
@@ -107,9 +128,19 @@ const postReducer = (state = initialState, action) => {
       };
 
     case reactionTypes.DELETE_REACTION_SUCCESS:
+      let postIdx = state.posts.findIndex((post) => post._id === payload.post);
+
+      let reactionIdx = state.posts[postIdx].reactions.findIndex(
+        (reaction) => reaction._id === payload._id
+      );
+
+      state.posts[postIdx].reactions.splice(reactionIdx, 1);
+
+      console.log(reactionIdx);
       return {
         ...state,
         loading: true,
+        posts: [...state.posts],
       };
 
     case types.SEND_REACTION_REQUEST:

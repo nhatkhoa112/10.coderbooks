@@ -39,7 +39,7 @@ reactionController.update = async (req, res) => {
     { new: true }
   );
   if (!newReaction)
-    return res.status(404).json({ message: 'Comment not found' });
+    return res.status(404).json({ message: 'Reaction not found' });
   let reaction = await Reaction.findById(req.params.reactionId).populate(
     'owner'
   );
@@ -47,11 +47,8 @@ reactionController.update = async (req, res) => {
 };
 
 reactionController.destroy = async (req, res) => {
-  // console.log(req.params);
-  // console.log(req.body);
   let reaction = await Reaction.findByIdAndDelete(req.params.reactionId);
-  console.log(reaction);
-  if (!reaction) return res.status(404).json({ msg: 'Reaction not found' });
+  if (!reaction) return res.status(404).json({ msg: 'reaction not found' });
   res.status(200).json(reaction);
 };
 

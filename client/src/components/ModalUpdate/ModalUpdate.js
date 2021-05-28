@@ -27,9 +27,7 @@ export const ModalUpdate = ({
 
   const selectedBlog = useSelector((state) => state.post.selectedBlog);
   const [postBody, setPostBody] = useState('');
-  const handleSubmitPost = (e) => {
-    e.preventDefault();
-  };
+
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(postActions.getSinglePost(postId));

@@ -22,3 +22,20 @@ export const ButtonR = styled.button`
     transform: scale(0.9);
   }
 `;
+
+export const IconContainer = styled.div`
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  border: 1.2px solid ${({ color }) => (color ? color : '')};
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-right: 10px;
+`;
+
+export const IconStyle = styled.i`
+  border-radius: 50%;
+  color: ${({ color }) => (color ? color : '')};
+  font-size: 1.3rem;
+`;
