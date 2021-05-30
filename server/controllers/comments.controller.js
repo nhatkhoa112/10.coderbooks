@@ -45,8 +45,7 @@ commentsController.update = async (req, res) => {
 };
 
 commentsController.destroy = async (req, res) => {
-  // console.log(req.params);
-  // console.log(req.body);
+ 
   let comment = await Comment.findByIdAndDelete(req.params.commentId);
   if (!comment) return res.status(404).json({ msg: 'Comment not found' });
   res.status(200).json(comment);

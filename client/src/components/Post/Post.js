@@ -168,6 +168,7 @@ const PostActionButton = ({ a, post }) => {
   if (userReaction.length > 0) {
     userReactionId = userReaction[0]._id;
   }
+
   const postId = post._id;
 
   return (
@@ -190,9 +191,9 @@ const PostActionButton = ({ a, post }) => {
             onClick={(e) => {
               e.preventDefault();
               if (userReaction.length !== 0) {
-                if (userReaction[0].type[0] !== 'Like') {
+                if (userReaction[0].type !== 'Like') {
                   dispatch(
-                    reactionActions.updateReaction(
+                    reactionActions.updateReactionInPost(
                       postId,
                       userReactionId,
                       'Like'
@@ -200,11 +201,13 @@ const PostActionButton = ({ a, post }) => {
                   );
                 } else {
                   dispatch(
-                    reactionActions.deleteReaction(postId, userReactionId)
+                    reactionActions.deleteReactionInPost(postId, userReactionId)
                   );
                 }
               } else {
-                dispatch(reactionActions.createReaction(postId, 'Like'));
+                dispatch(
+                  reactionActions.createReactionInPost(postId, 'Like', 'Post')
+                );
               }
             }}
           >
@@ -221,9 +224,9 @@ const PostActionButton = ({ a, post }) => {
             onClick={(e) => {
               e.preventDefault();
               if (userReaction.length !== 0) {
-                if (userReaction[0].type[0] !== 'Love') {
+                if (userReaction[0].type !== 'Love') {
                   dispatch(
-                    reactionActions.updateReaction(
+                    reactionActions.updateReactionInPost(
                       postId,
                       userReactionId,
                       'Love'
@@ -231,11 +234,13 @@ const PostActionButton = ({ a, post }) => {
                   );
                 } else {
                   dispatch(
-                    reactionActions.deleteReaction(postId, userReactionId)
+                    reactionActions.deleteReactionInPost(postId, userReactionId)
                   );
                 }
               } else {
-                dispatch(reactionActions.createReaction(postId, 'Love'));
+                dispatch(
+                  reactionActions.createReactionInPost(postId, 'Love', 'Post')
+                );
               }
             }}
           >
@@ -252,9 +257,9 @@ const PostActionButton = ({ a, post }) => {
             onClick={(e) => {
               e.preventDefault();
               if (userReaction.length !== 0) {
-                if (userReaction[0].type[0] !== 'Surprise') {
+                if (userReaction[0].type !== 'Surprise') {
                   dispatch(
-                    reactionActions.updateReaction(
+                    reactionActions.updateReactionInPost(
                       postId,
                       userReactionId,
                       'Surprise'
@@ -262,11 +267,17 @@ const PostActionButton = ({ a, post }) => {
                   );
                 } else {
                   dispatch(
-                    reactionActions.deleteReaction(postId, userReactionId)
+                    reactionActions.deleteReactionInPost(postId, userReactionId)
                   );
                 }
               } else {
-                dispatch(reactionActions.createReaction(postId, 'Surprise'));
+                dispatch(
+                  reactionActions.createReactionInPost(
+                    postId,
+                    'Surprise',
+                    'Post'
+                  )
+                );
               }
             }}
           >
@@ -283,9 +294,9 @@ const PostActionButton = ({ a, post }) => {
             onClick={(e) => {
               e.preventDefault();
               if (userReaction.length !== 0) {
-                if (userReaction[0].type[0] !== 'Sad') {
+                if (userReaction[0].type !== 'Sad') {
                   dispatch(
-                    reactionActions.updateReaction(
+                    reactionActions.updateReactionInPost(
                       postId,
                       userReactionId,
                       'Sad'
@@ -293,11 +304,13 @@ const PostActionButton = ({ a, post }) => {
                   );
                 } else {
                   dispatch(
-                    reactionActions.deleteReaction(postId, userReactionId)
+                    reactionActions.deleteReactionInPost(postId, userReactionId)
                   );
                 }
               } else {
-                dispatch(reactionActions.createReaction(postId, 'Sad'));
+                dispatch(
+                  reactionActions.createReactionInPost(postId, 'Sad', 'Post')
+                );
               }
             }}
           >
@@ -314,9 +327,9 @@ const PostActionButton = ({ a, post }) => {
             onClick={(e) => {
               e.preventDefault();
               if (userReaction.length !== 0) {
-                if (userReaction[0].type[0] !== 'Angry') {
+                if (userReaction[0].type !== 'Angry') {
                   dispatch(
-                    reactionActions.updateReaction(
+                    reactionActions.updateReactionInPost(
                       postId,
                       userReactionId,
                       'Angry'
@@ -324,11 +337,13 @@ const PostActionButton = ({ a, post }) => {
                   );
                 } else {
                   dispatch(
-                    reactionActions.deleteReaction(postId, userReactionId)
+                    reactionActions.deleteReactionInPost(postId, userReactionId)
                   );
                 }
               } else {
-                dispatch(reactionActions.createReaction(postId, 'Angry'));
+                dispatch(
+                  reactionActions.createReactionInPost(postId, 'Angry', 'Post')
+                );
               }
             }}
           >
@@ -376,7 +391,7 @@ const PostReactions = ({ comments, reactions }) => {
     <div className="d-flex justify-content-between my-2 mx-3">
       <p className="mb-0 d-flex justify-content-between">
         {icons.map((icon) => {
-          if (icon.type === userReaction[0]?.type[0]) {
+          if (icon.type === userReaction[0]?.type) {
             return (
               <IconContainer color={icon.color}>
                 <IconStyle
@@ -387,31 +402,6 @@ const PostReactions = ({ comments, reactions }) => {
             );
           }
         })}
-        {/* {userReaction[0]?.type[0] === 'Like' ? (
-          <div
-            style={{
-              width: '2rem',
-              height: '2rem',
-              borderRadius: '50%',
-              background: 'blue',
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center',
-              marginRight: '10px',
-            }}
-          >
-            <i
-              className="far fa-thumbs-up"
-              style={{
-                borderRadius: '50%',
-                color: 'white',
-                fontSize: '1rem',
-              }}
-            ></i>
-          </div>
-        ) : (
-          ''
-        )} */}
         {userReaction.length > 0 ? 'you' : ''}{' '}
         {reactions.length > 1 ? `and ${reactions.length - 1} people` : ''}
       </p>

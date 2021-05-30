@@ -134,40 +134,46 @@ postController.getPostsByUserEmail = async (req, res) => {
         path: 'owner',
       },
     })
+    .populate({
+      path: 'reactions',
+      populate: {
+        path: 'owner',
+      },
+    })
     .skip(skip)
     .sort({ _id: -1 })
     .limit(limit);
   return sendResponse(res, 200, true, { posts }, null, 'Received posts');
 };
 
-postController.createReaction = async (req, res) => {
-  const reaction = await Reaction.create({
-    ...req.body,
-    owner: req.userId,
-    post: req.params.id,
-  });
+// postController.createReaction = async (req, res) => {
+//   const reaction = await Reaction.create({
+//     ...req.body,
+//     owner: req.userId,
+//     post: req.params.id,
+//   });
 
-  const newPost = await Post.findById(req.params.id);
-  newPost.reactions.push(reaction._id);
+//   const newPost = await Post.findById(req.params.id);
+//   newPost.reactions.push(reaction._id);
 
-  await newPost.save();
-  const post = await Post.findById(req.params.id)
-    .populate('owner')
-    .populate('comments')
-    .populate({
-      path: 'comments',
-      populate: {
-        path: 'owner',
-      },
-    })
-    .populate('reactions')
-    .populate({
-      path: 'reactions',
-      populate: {
-        path: 'owner',
-      },
-    });
-  return sendResponse(res, 200, true, { post }, null, 'Reaction created!');
-};
+//   await newPost.save();
+//   const post = await Post.findById(req.params.id)
+//     .populate('owner')
+//     .populate('comments')
+//     .populate({
+//       path: 'comments',
+//       populate: {
+//         path: 'owner',
+//       },
+//     })
+//     .populate('reactions')
+//     .populate({
+//       path: 'reactions',
+//       populate: {
+//         path: 'owner',
+//       },
+//     });
+//   return sendResponse(res, 200, true, { post }, null, 'Reaction created!');
+// };
 
 module.exports = postController;

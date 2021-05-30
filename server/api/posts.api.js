@@ -16,7 +16,7 @@ router.post(
 router.post(
   '/:id/reactions',
   authMiddleware.loginRequired,
-  postsController.createReaction
+  reactionController.create
 );
 
 router.delete(
@@ -26,13 +26,13 @@ router.delete(
 );
 
 router.delete(
-  '/:postId/reactions/:reactionId',
+  '/:id/reactions/:reactionId',
   authMiddleware.loginRequired,
   reactionController.destroy
 );
 
 router.patch(
-  '/:postId/reactions/:reactionId',
+  '/:id/reactions/:reactionId',
   authMiddleware.loginRequired,
   reactionController.update
 );

@@ -1,5 +1,7 @@
 const Reaction = require('../models/Reaction');
-
+const mongoose = require('mongoose');
+const Post = require('../models/Post');
+const Comment = require('../models/Comment');
 // We don't use AppError & sendResponse in this controller.
 const {
   AppError,
@@ -10,15 +12,49 @@ const {
 const reactionController = {};
 
 reactionController.create = catchAsync(async (req, res) => {
-  const comment = await Comment.create({
+  const reaction = await Reaction.create({
+    ...req.body,
     owner: req.userId,
-    body: req.body.body,
-    post: req.body.postId,
   });
 
-  // Here we'd need to update the post as well.
+  let reactionableKlass = await mongoose
+    .model(req.body.reactionableType)
+    .findById(req.params.id);
 
-  res.json(comment);
+  await reactionableKlass.reactions.push(reaction._id);
+  await reactionableKlass
+    .populate('owner')
+    .populate({ path: 'comments', populate: { path: 'owner' } })
+    .populate({ path: 'reactions', populate: { path: 'owner' } });
+  await reactionableKlass.execPopulate();
+  // reactionableKlass = await mongoose
+  //   .model(req.body.reactionableType)
+  //   .findById(req.params.id)
+  //   .populate('owner')
+  //   .populate({
+  //     path: 'comments',
+  //     populate: {
+  //       path: 'owner',
+  //     },
+  //   })
+  //   .populate({
+  //     path: 'reactions',
+  //     populate: {
+  //       path: 'owner',
+  //     },
+  //   });
+
+  await reaction.save();
+  await reactionableKlass.save();
+
+  return sendResponse(
+    res,
+    200,
+    true,
+    { reactionableKlass, reaction },
+    null,
+    'Reacted!'
+  );
 });
 
 reactionController.read = async (req, res) => {

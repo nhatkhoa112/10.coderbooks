@@ -21,7 +21,6 @@ const deleteComment = (commentId, postId) => async (dispatch) => {
   dispatch({ type: types.DELETE_COMMENT, payload: null });
   try {
     const res = await api.delete(`/posts/${postId}/comments/${commentId}`);
-    // console.log(res.data);
     dispatch({ type: types.DELETE_COMMENT_SUCCESS, payload: res.data });
   } catch (error) {
     dispatch({ type: types.DELETE_COMMENT_FAILURE, payload: null });
@@ -34,7 +33,6 @@ const updateComment = (commentId, postId, bodyComment) => async (dispatch) => {
     const res = await api.patch(`/posts/${postId}/comments/${commentId}`, {
       body: bodyComment,
     });
-    console.log(res.data);
     dispatch({ type: types.UPDATE_COMMENT_SUCCESS, payload: res.data });
   } catch (error) {
     dispatch({ type: types.UPDATE_COMMENT_FAILURE, payload: null });

@@ -38,7 +38,6 @@ const authReducer = (state = initialState, action) => {
     case types.REGISTER_SUCCESS:
       localStorage.setItem('accessToken', payload.accessToken);
       localStorage.setItem('fbUser', JSON.stringify(payload.user));
-      console.log(payload.user);
       return {
         ...state,
         loading: false,

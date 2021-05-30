@@ -107,7 +107,9 @@ const postReducer = (state = initialState, action) => {
       };
 
     case reactionTypes.UPDATE_REACTION_SUCCESS:
-      let ide = state.posts.findIndex((post) => post._id === payload.post);
+      let ide = state.posts.findIndex(
+        (post) => post._id === payload.reactionableId
+      );
       let idw = state.posts[ide].reactions.findIndex(
         (reaction) => reaction._id === payload._id
       );
@@ -128,7 +130,9 @@ const postReducer = (state = initialState, action) => {
       };
 
     case reactionTypes.DELETE_REACTION_SUCCESS:
-      let postIdx = state.posts.findIndex((post) => post._id === payload.post);
+      let postIdx = state.posts.findIndex(
+        (post) => post._id === payload.reactionableId
+      );
 
       let reactionIdx = state.posts[postIdx].reactions.findIndex(
         (reaction) => reaction._id === payload._id
@@ -136,7 +140,6 @@ const postReducer = (state = initialState, action) => {
 
       state.posts[postIdx].reactions.splice(reactionIdx, 1);
 
-      console.log(reactionIdx);
       return {
         ...state,
         loading: true,
