@@ -11,7 +11,7 @@ const initialState = {
 
 const postReducer = (state = initialState, action) => {
   const { type, payload } = action;
-  let idu, idz;
+  // let idu, idz;
   switch (type) {
     case reactionTypes.UPDATE_REACTION:
     case reactionTypes.DELETE_REACTION:
@@ -95,11 +95,11 @@ const postReducer = (state = initialState, action) => {
       };
 
     case commentTypes.UPDATE_COMMENT_SUCCESS:
-      idu = state.posts.findIndex((post) => post._id === payload.post);
-      let idz = state.posts[idu].comments.findIndex(
+      let ida = state.posts.findIndex((post) => post._id === payload.post);
+      let idb = state.posts[ida].comments.findIndex(
         (comment) => comment._id === payload._id
       );
-      state.posts[idu].comments[idz] = payload;
+      state.posts[ida].comments[idb] = payload;
       return {
         ...state,
         loading: false,

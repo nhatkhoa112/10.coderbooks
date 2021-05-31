@@ -12,7 +12,7 @@ const loginRequest = (email, password) => async (dispatch) => {
     toast.success(`Welcome ${name}`);
     api.defaults.headers.common['authorization'] =
       'Bearer ' + res.data.data.accessToken;
-
+    console.log(api.defaults.headers.common['authorization']);
     localStorage.setItem('accessToken', res.data.data.accessToken);
   } catch (error) {
     dispatch({ type: types.LOGIN_FAILURE, payload: error });
@@ -34,6 +34,7 @@ const loginFacebookRequest = (access_token) => async (dispatch) => {
 };
 
 const loginGoogleRequest = (access_token) => async (dispatch) => {
+  // console.log(access_token);
   dispatch({ type: types.LOGIN_GOOGLE_REQUEST, payload: null });
   try {
     const res = await api.post('/auth/login/google', { access_token });

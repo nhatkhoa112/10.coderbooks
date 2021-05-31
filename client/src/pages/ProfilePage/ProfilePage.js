@@ -15,6 +15,7 @@ export default function ProfilePage() {
   const [postId, setPostId] = useState('');
   const userEmail = user.email;
   useEffect(() => {
+    // document.location.reload();
     dispatch(postActions.getPostsByUser(userEmail));
   }, [dispatch]);
   return (

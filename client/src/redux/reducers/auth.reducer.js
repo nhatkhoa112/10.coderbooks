@@ -83,6 +83,8 @@ const authReducer = (state = initialState, action) => {
       };
 
     case types.LOGOUT:
+      localStorage.removeItem('accessToken');
+      localStorage.removeItem('fbUser');
       return {
         ...state,
         user: null,

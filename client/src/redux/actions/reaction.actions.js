@@ -51,8 +51,31 @@ const deleteReactionInPost = (postId, reactionId) => async (dispatch) => {
   }
 };
 
+const createReactionInComment =
+  (reactionableId, string, reactionableType) => async (dispatch) => {
+    dispatch({ type: types.CREATE_REACTION_IN_COMMENT, payload: null });
+    try {
+      const res = await api.post(`comments/${reactionableId}/reactions`, {
+        type: string,
+        reactionableId,
+        reactionableType,
+      });
+      dispatch({
+        type: types.CREATE_REACTION_IN_COMMENT_SUCCESS,
+        payload: res.data.data.reactionableKlass,
+      });
+    } catch (error) {
+      dispatch({
+        type: types.CREATE_REACTION_IN_COMMENT_FAILURE,
+        payload: null,
+      });
+      console.log(error);
+    }
+  };
+
 export const reactionActions = {
   createReactionInPost,
   updateReactionInPost,
   deleteReactionInPost,
+  createReactionInComment,
 };

@@ -15,7 +15,7 @@ authController.loginWithEmail = catchAsync(async (req, res, next) => {
 
   const isMatch = await bcrypt.compare(password, user.password);
   if (!isMatch) return next(new AppError(400, 'Wrong password', 'Login Error'));
-  
+
   accessToken = await user.generateToken();
   return sendResponse(
     res,
@@ -26,5 +26,20 @@ authController.loginWithEmail = catchAsync(async (req, res, next) => {
     'Login successful'
   );
 });
+
+authController.loginWithFacebookOrGoogle = async ({ user }, res) => {
+  if (user) {
+    user = await User.findByIdAndUpdate(
+      user._id,
+      { avatarUrl: user.avatarUrl },
+      { new: true }
+    );
+  } else {
+    throw new Error('There is No User');
+  }
+
+  const accessToken = await user.generateToken();
+  res.status(200).json({ status: 'success', data: { user, accessToken } });
+};
 
 module.exports = authController;

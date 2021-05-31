@@ -20,32 +20,29 @@ reactionController.create = catchAsync(async (req, res) => {
   let reactionableKlass = await mongoose
     .model(req.body.reactionableType)
     .findById(req.params.id);
+  await reaction.save();
 
   await reactionableKlass.reactions.push(reaction._id);
   await reactionableKlass
     .populate('owner')
-    .populate({ path: 'comments', populate: { path: 'owner' } })
+    .populate({
+      path: 'comments',
+      populate: {
+        path: 'owner',
+      },
+    })
     .populate({ path: 'reactions', populate: { path: 'owner' } });
-  await reactionableKlass.execPopulate();
-  // reactionableKlass = await mongoose
-  //   .model(req.body.reactionableType)
-  //   .findById(req.params.id)
-  //   .populate('owner')
-  //   .populate({
-  //     path: 'comments',
-  //     populate: {
-  //       path: 'owner',
-  //     },
-  //   })
-  //   .populate({
-  //     path: 'reactions',
-  //     populate: {
-  //       path: 'owner',
-  //     },
-  //   });
+  // .execPopulate();
 
-  await reaction.save();
+  console.log({ alo: '1', reaction, reactionableKlass });
+
+  await reactionableKlass.execPopulate();
+
+  // console.log({ alo: '2', reaction, reactionableKlass });
+
   await reactionableKlass.save();
+
+  console.log({ alo: '3', reaction, reactionableKlass });
 
   return sendResponse(
     res,

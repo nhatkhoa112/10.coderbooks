@@ -1,6 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { Reaction, ButtonR, IconContainer, IconStyle } from './PostElement.js';
+
+import {
+  Reaction,
+  ButtonR,
+  IconContainer,
+  IconStyle,
+  ReactionComment,
+  ButtonS,
+} from './PostElement.js';
 import {
   Col,
   Form,
@@ -56,15 +64,25 @@ const CommentForm = ({ postId, comments }) => {
 const Comment = ({ comment }) => {
   const commentId = comment._id;
   const postId = comment.post._id;
+  const [isReaction, setIsReaction] = useState(false);
   const [isEdit, setIsEdit] = useState(false);
   const [bodyComment, setBodyComment] = useState('');
   const user = useSelector((state) => state.auth.user);
   const dispatch = useDispatch();
   const handleUpdateComment = (e) => {
     e.preventDefault();
+    // document.location.reload();
     dispatch(commentActions.updateComment(commentId, postId, bodyComment));
     setIsEdit(false);
   };
+
+  const commentReaction = comment.reactions.filter(
+    (reaction) => reaction.reactionableId === commentId
+  );
+
+  const userCommentReaction = commentReaction.find(
+    (reaction) => reaction.owner.email === user.email
+  );
 
   return (
     <ListGroupItem className="justify-content-start border-bottom-0 pr-0 py-0">
@@ -77,6 +95,68 @@ const Comment = ({ comment }) => {
         />
       </Nav.Link>
       <div className="col position-relative">
+        <ReactionComment isReaction={isReaction}>
+          <ButtonS
+            onClick={(e) => {
+              dispatch(
+                reactionActions.createReactionInComment(
+                  commentId,
+                  'Like',
+                  'Comment'
+                )
+              );
+            }}
+          >
+            <i
+              className="far fa-thumbs-up"
+              style={{
+                borderRadius: '50%',
+                color: 'blue',
+                fontSize: '1rem',
+              }}
+            ></i>
+          </ButtonS>
+          <ButtonS onClick={(e) => {}}>
+            <i
+              className="fas fa-heart"
+              style={{
+                borderRadius: '50%',
+                color: 'red',
+                fontSize: '1rem',
+              }}
+            ></i>
+          </ButtonS>
+          <ButtonS onClick={(e) => {}}>
+            <i
+              className="fas fa-surprise"
+              style={{
+                borderRadius: '50%',
+                color: 'orange',
+                fontSize: '1rem',
+              }}
+            ></i>
+          </ButtonS>
+          <ButtonS onClick={(e) => {}}>
+            <i
+              className="fas fa-sad-tear"
+              style={{
+                borderRadius: '50%',
+                color: 'orange',
+                fontSize: '1rem',
+              }}
+            ></i>
+          </ButtonS>
+          <ButtonS onClick={(e) => {}}>
+            <i
+              className="fas fa-angry"
+              style={{
+                borderRadius: '50%',
+                color: 'tomato',
+                fontSize: '1rem',
+              }}
+            ></i>
+          </ButtonS>
+        </ReactionComment>
         <div className="comment-bubble">
           <Nav.Link
             className="owner-name"
@@ -103,7 +183,7 @@ const Comment = ({ comment }) => {
               />
             </form>
           ) : (
-            <p>{comment.body}</p>
+            <p onClick={() => setIsReaction(!isReaction)}>{comment.body}</p>
           )}
 
           {user.email === comment.owner.email ? (
@@ -117,9 +197,9 @@ const Comment = ({ comment }) => {
                   Edit
                 </NavDropdown.Item>
                 <NavDropdown.Item
-                  onClick={() =>
-                    dispatch(commentActions.deleteComment(commentId, postId))
-                  }
+                  onClick={() => {
+                    dispatch(commentActions.deleteComment(commentId, postId));
+                  }}
                 >
                   Delete
                 </NavDropdown.Item>
@@ -164,7 +244,13 @@ const PostActionButton = ({ a, post }) => {
   const userReaction = post.reactions.filter(
     (reaction) => reaction.owner.email === user.email
   );
+
+  const userReaction2 = post.reactions.map((reaction) => {
+    // console.log(reaction.owner.email, user.email);
+  });
+
   let userReactionId;
+  // console.log(userReaction);
   if (userReaction.length > 0) {
     userReactionId = userReaction[0]._id;
   }
@@ -175,7 +261,9 @@ const PostActionButton = ({ a, post }) => {
     <Button
       className="bg-light bg-white text-dark border-0 position-relative"
       onClick={() => {
-        if ((a.title = 'Like')) setIsReaction(!isReaction);
+        if (a.title === 'Like') {
+          setIsReaction(!isReaction);
+        }
       }}
     >
       {' '}
@@ -190,6 +278,7 @@ const PostActionButton = ({ a, post }) => {
           <ButtonR
             onClick={(e) => {
               e.preventDefault();
+
               if (userReaction.length !== 0) {
                 if (userReaction[0].type !== 'Like') {
                   dispatch(
@@ -223,6 +312,7 @@ const PostActionButton = ({ a, post }) => {
           <ButtonR
             onClick={(e) => {
               e.preventDefault();
+
               if (userReaction.length !== 0) {
                 if (userReaction[0].type !== 'Love') {
                   dispatch(
@@ -256,6 +346,7 @@ const PostActionButton = ({ a, post }) => {
           <ButtonR
             onClick={(e) => {
               e.preventDefault();
+
               if (userReaction.length !== 0) {
                 if (userReaction[0].type !== 'Surprise') {
                   dispatch(
@@ -293,6 +384,7 @@ const PostActionButton = ({ a, post }) => {
           <ButtonR
             onClick={(e) => {
               e.preventDefault();
+
               if (userReaction.length !== 0) {
                 if (userReaction[0].type !== 'Sad') {
                   dispatch(
@@ -326,6 +418,7 @@ const PostActionButton = ({ a, post }) => {
           <ButtonR
             onClick={(e) => {
               e.preventDefault();
+
               if (userReaction.length !== 0) {
                 if (userReaction[0].type !== 'Angry') {
                   dispatch(
@@ -403,10 +496,14 @@ const PostReactions = ({ comments, reactions }) => {
           }
         })}
         {userReaction.length > 0 ? 'you' : ''}{' '}
-        {reactions.length > 1 ? `and ${reactions.length - 1} people` : ''}
+        {userReaction.length > 0 && reactions.length > 1 ? 'and' : ''}
+        {reactions.length - userReaction.length > 0
+          ? ` ${reactions.length - userReaction.length} people`
+          : ''}
       </p>
       <p className="mb-0">
-        {comments.length !== 0 ? `${comments.length} comments` : ''}{' '}
+        {comments.length === 1 ? ` ${comments.length} comment` : ''}
+        {comments.length > 1 ? `${comments.length} comments` : ''}{' '}
       </p>
     </div>
   );
@@ -451,7 +548,10 @@ function PostHeader({
             Edit
           </NavDropdown.Item>
           <NavDropdown.Item
-            onClick={() => dispatch(postActions.deletePost(postId))}
+            onClick={() => {
+              if (user.email === userMakePost.email)
+                dispatch(postActions.deletePost(postId));
+            }}
           >
             Delete
           </NavDropdown.Item>

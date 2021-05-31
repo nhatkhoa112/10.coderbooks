@@ -25,3 +25,23 @@ p.footer {
 .p-terms {
   font-size: 0.7rem;
 }
+
+.mx-auto.mt-3.form-group {
+  width: 100% !important;
+  display: flex !important;
+  flex-direction: column !important;
+  text-align: center !important;
+  /* justify-content: center; */
+  /* align-items: center; */
+}
+
+button.google-btn.d-flex.justify-content-center {
+  /* border: 1px solid #ccc !important; */
+}
+
+button.google-btn.d-flex.justify-content-center:hover {
+  cursor: pointer !important;
+}
+
+button.kep-login-facebook.metro {
+}

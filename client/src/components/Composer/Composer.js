@@ -27,6 +27,7 @@ export default function Composer() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    // document.location.reload();
     dispatch(postActions.createPost(post));
     setPost({ ...post, body: '' });
   };

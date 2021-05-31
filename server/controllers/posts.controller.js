@@ -70,6 +70,7 @@ postController.list = catchAsync(async (req, res) => {
         path: 'owner',
       },
     })
+
     .populate({
       path: 'reactions',
       populate: {
@@ -110,6 +111,7 @@ postController.createComment = async (req, res) => {
         path: 'owner',
       },
     })
+
     .populate('reactions')
     .populate({
       path: 'reactions',
